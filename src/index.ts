@@ -1,19 +1,13 @@
-import fastify from "fastify";
-import mercurius from "mercurius";
+import { ApolloServer } from "apollo-server";
 import resolvers from "./resolvers";
-import schema from "./schemas";
+import { importSchema } from "graphql-import";
 
-const server = fastify({ logger: true });
-
-server.register(mercurius, {
-  schema,
+const server = new ApolloServer({
+  typeDefs: importSchema(require.resolve("./schema/index.graphql")),
   resolvers,
-  graphiql: true,
 });
 
-server.get("/", async (request, reply) => {
-  const users = await server.graphql(`{ users }`);
-  return users;
-});
-
-server.listen({ port: process.env.SERVER_PORT });
+server
+  .listen()
+  .then(({ url }) => console.log(`Server started on ${url}`))
+  .catch((error) => console.log(error));
