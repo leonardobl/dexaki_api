@@ -8,6 +8,6 @@ const server = new ApolloServer({
 });
 
 server
-  .listen()
-  .then(({ url }) => console.log(`Server started on ${url}`))
+  .listen(process.env.SERVER_PORT)
+  .then(({ url }) => console.log(`Server on...`))
   .catch((error) => console.log(error));
